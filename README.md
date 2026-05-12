@@ -15,7 +15,19 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 ### `npm run dev`
 
-Lệnh để chạy file nếu quên <br>
+chạy project <br>
+
+### `npm run build`
+
+build production <br>
+
+### `npm run preview`
+
+xem bản build<br>
+
+### `npm run lint `
+
+kiểm tra code<br>
 
 ## Expanding the ESLint configuration
 
