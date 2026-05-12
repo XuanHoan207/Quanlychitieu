@@ -7,19 +7,23 @@ function App() {
 
   useEffect(() => {
 
-    getUser()
+    // lấy user hiện tại
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+    })
+
+    // lắng nghe đăng nhập
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user ?? null)
+      }
+    )
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
 
   }, [])
-
-  async function getUser() {
-
-    const { data, error } = await supabase.auth.getUser()
-
-    console.log(data.user)
-
-    setUser(data.user)
-
-  }
 
   async function signInGoogle() {
 
@@ -29,19 +33,34 @@ function App() {
 
   }
 
+  async function signOut() {
+    await supabase.auth.signOut()
+  }
+
   return (
     <div>
 
-      <button onClick={signInGoogle}>
-        Đăng nhập Google
-      </button>
-
-      {user && (
+      {!user ? (
+        <button onClick={signInGoogle}>
+          Đăng nhập Google
+        </button>
+      ) : (
         <div>
 
           <h1>
             Xin chào {user.user_metadata.full_name}
           </h1>
+
+          <img
+            src={user.user_metadata.avatar_url}
+            width="100"
+          />
+
+          <br />
+
+          <button onClick={signOut}>
+            Đăng xuất
+          </button>
 
         </div>
       )}
